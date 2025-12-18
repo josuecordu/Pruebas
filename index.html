@@ -14,6 +14,41 @@ body{
   background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
 }
 
+/* ===== MENÚ ☰ ===== */
+.menu-toggle{
+  position:fixed;
+  top:14px;
+  left:14px;
+  font-size:1.8rem;
+  cursor:pointer;
+  color:#fff;
+  z-index:100;
+}
+
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:240px;
+  height:100%;
+  background:#fdf8f2;
+  box-shadow:5px 0 15px rgba(0,0,0,.3);
+  padding:1rem;
+  transition:0.3s;
+  z-index:99;
+}
+
+.side-menu.active{left:0;}
+
+.side-menu h3{margin-top:0;}
+
+.fav-item{
+  cursor:pointer;
+  padding:0.4rem;
+  border-bottom:1px solid #ddd;
+}
+.fav-item:hover{background:#eee;}
+
 /* ===== TÍTULO ===== */
 header{
   text-align:center;
@@ -32,7 +67,6 @@ header h1{margin:0;font-size:2.5rem;}
   display:flex;
   align-items:center;
   gap:0.4rem;
-  position:relative;
 }
 
 .player button{
@@ -51,29 +85,6 @@ header h1{margin:0;font-size:2.5rem;}
   margin:0.3rem auto 1rem;
   max-width:720px;
 }
-
-.menu-btn{font-size:1.4rem;}
-
-.song-list{
-  display:none;
-  position:absolute;
-  top:42px;
-  right:8px;
-  background:#fff;
-  border:1px solid #ccc;
-  border-radius:6px;
-  max-height:220px;
-  overflow:auto;
-  width:260px;
-  z-index:10;
-}
-
-.song-list div{
-  padding:0.5rem;
-  cursor:pointer;
-  font-size:0.8rem;
-}
-.song-list div:hover{background:#eee;}
 
 /* ===== LIBRO ===== */
 main{
@@ -95,16 +106,13 @@ main{
 
 .page.active{display:block;}
 
-.page h2{text-align:center;margin-top:0}
-
-/* CONTENIDO FIJO */
 .poem-content{
-  height:420px;              /* 🔒 ALTO FIJO */
-  overflow-y:auto;           /* scroll interno */
+  height:420px;
+  overflow-y:auto;
   line-height:1.8;
 }
 
-/* ===== FAVORITO ===== */
+/* ===== FAVORITO ♥ ===== */
 .favorite{
   position:absolute;
   top:18px;
@@ -116,17 +124,7 @@ main{
 .favorite.active{color:#c0392b;}
 
 /* ===== NAVEGACIÓN ===== */
-.page-number{
-  text-align:center;
-  margin-top:1rem;
-  font-size:0.8rem;
-  color:#777;
-}
-
-.page-nav{
-  text-align:center;
-  margin-top:0.6rem;
-}
+.page-nav{text-align:center;margin-top:0.8rem;}
 .page-nav button{
   border:1px solid #333;
   background:none;
@@ -134,136 +132,145 @@ main{
   width:32px;
   height:32px;
   margin:0 4px;
-  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
+<!-- MENÚ -->
+<div class="menu-toggle" onclick="toggleMenu()">☰</div>
+<div class="side-menu" id="sideMenu">
+  <h3>Favoritos ❤️</h3>
+  <div id="favList"></div>
+</div>
+
 <header>
   <h1>Arepita</h1>
 </header>
 
-<!-- REPRODUCTOR -->
 <div class="player">
   <button onclick="prevSong()">⏮️</button>
   <button onclick="togglePlay()">▶️</button>
   <button onclick="nextSong()">⏭️</button>
-  <button onclick="toggleShuffle()">🔀</button>
-  <input type="range" class="progress" value="0">
-  <button class="menu-btn" onclick="toggleMenu()">⋮</button>
-  <div class="song-list" id="songList"></div>
+  <input type="range" class="progress">
 </div>
 
 <div class="song-name" id="songName">—</div>
-
 <audio id="audio"></audio>
 
 <main>
 
-<!-- PÁGINA 1 -->
-<section class="page active" data-page="0">
+<section class="page active" data-page="0" data-title="Fuego a la distancia">
 <span class="favorite" onclick="toggleFavorite(0)">♥</span>
 <h2>Fuego a la distancia</h2>
 <div class="poem-content">
-<p>Entre mares y kilómetros se esconde tu voz,<br>y aun así, me alcanza.<br><br>
-No hay muro que detenga la chispa que encendiste sin tocarme.<br><br>
-Eres fuego que no quema, pero arde en cada pensamiento;<br>
-labra el aire con su fuerza, y deja en mi pecho un desvelo eterno.<br><br>
-Trabajas, brillas, resistes,<br>
-mujer hecha de empeño y llama,<br>
-y aunque el mundo nos mida en mapas,<br>
-mi alma te busca sin brújula ni calma.<br><br>
-Quizá el destino juega con nosotros,<br>
-quizá el tiempo pruebe su poder,<br>
-pero hay miradas que, aunque lejanas,<br>
-encienden más que el amanecer.</p>
+Entre mares y kilómetros se esconde tu voz, y aun así, me alcanza...
 </div>
-<div class="page-number">1</div>
 <div class="page-nav">
 <button onclick="showPage(0)">1</button>
 <button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
 </div>
 </section>
 
-<!-- PÁGINA 2 -->
-<section class="page" data-page="1">
+<section class="page" data-page="1" data-title="Mientras tanto">
 <span class="favorite" onclick="toggleFavorite(1)">♥</span>
 <h2>Mientras tanto</h2>
 <div class="poem-content">
-<p>No te tengo,<br>pero te sostengo en la calma.<br>
-Como se sostiene una certeza<br>
-que no necesita pruebas.<br><br>
-La distancia no nos separa,<br>
-nos aprende.<br>
-Nos vuelve pacientes,<br>
-nos vuelve verdad.<br><br>
-Te extraño sin ruido,<br>
-sin urgencia,<br>
-porque sé que el tiempo<br>
-también sabe amar.<br><br>
-Nuestro amor no corre,<br>
-permanece.<br>
-Crece en lo invisible,<br>
-en lo que aún no ocurre.</p>
+No te tengo, pero te sostengo en la calma...
 </div>
-<div class="page-number">2</div>
 <div class="page-nav">
 <button onclick="showPage(0)">1</button>
 <button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
+</div>
+</section>
+
+<section class="page" data-page="2" data-title="Te anhelo">
+<span class="favorite" onclick="toggleFavorite(2)">♥</span>
+<h2>Te anhelo</h2>
+<div class="poem-content">
+Como el cielo anhela al sol cuando cae la tarde...
+</div>
+<div class="page-nav">
+<button onclick="showPage(0)">1</button>
+<button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
+</div>
+</section>
+
+<section class="page" data-page="3" data-title="Destino">
+<span class="favorite" onclick="toggleFavorite(3)">♥</span>
+<h2>Destino</h2>
+<div class="poem-content">
+Hay mujeres bellas, y luego estás tú...
+</div>
+<div class="page-nav">
+<button onclick="showPage(0)">1</button>
+<button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
 </div>
 </section>
 
 </main>
 
 <script>
-/* ===== PÁGINAS ===== */
 const pages=document.querySelectorAll('.page');
+const favList=document.getElementById("favList");
+
 function showPage(n){
   pages.forEach(p=>p.classList.remove('active'));
   pages[n].classList.add('active');
 }
 
-/* ===== FAVORITO ===== */
+function toggleMenu(){
+  document.getElementById("sideMenu").classList.toggle("active");
+}
+
+function getFavorites(){
+  return JSON.parse(localStorage.getItem("favorites")||"[]");
+}
+
+function saveFavorites(f){ localStorage.setItem("favorites",JSON.stringify(f)); }
+
 function toggleFavorite(i){
-  localStorage.setItem("favoritePoem", i);
+  let favs=getFavorites();
+  if(favs.includes(i)) favs=favs.filter(x=>x!==i);
+  else favs.push(i);
+  saveFavorites(favs);
+  updateFavorites();
+}
+
+function updateFavorites(){
   document.querySelectorAll(".favorite").forEach(f=>f.classList.remove("active"));
-  document.querySelector(`.page[data-page="${i}"] .favorite`).classList.add("active");
+  favList.innerHTML="";
+  getFavorites().forEach(i=>{
+    document.querySelector(`.page[data-page="${i}"] .favorite`).classList.add("active");
+    const title=document.querySelector(`.page[data-page="${i}"]`).dataset.title;
+    const div=document.createElement("div");
+    div.className="fav-item";
+    div.textContent=title;
+    div.onclick=()=>{showPage(i);toggleMenu();}
+    favList.appendChild(div);
+  });
 }
 
-const fav=localStorage.getItem("favoritePoem");
-if(fav!==null){
-  document.querySelector(`.page[data-page="${fav}"] .favorite`).classList.add("active");
-}
+updateFavorites();
 
-/* ===== MÚSICA ===== */
-const songs=[
-"Combustión - Jósean Log(MP3_160K).mp3",
-"Diego Luna - Te Amo Y Más (Letra)(MP3_160K).mp3"
-];
-
-let index=0;
-let shuffle=false;
+/* Música mínima */
+const songs=["Combustión - Jósean Log(MP3_160K).mp3"];
 const audio=document.getElementById("audio");
 const songName=document.getElementById("songName");
-
-function cleanName(name){
-  return name.replace(/\(.*?\)|\.mp3|\.m4a/gi,"").trim();
-}
-
-function loadSong(i){
-  audio.src=songs[i];
-  songName.textContent=cleanName(songs[i]);
-  audio.play();
-}
-
-function togglePlay(){ audio.paused?audio.play():audio.pause(); }
-function nextSong(){ index=(index+1)%songs.length; loadSong(index); }
-function prevSong(){ index=(index-1+songs.length)%songs.length; loadSong(index); }
-function toggleShuffle(){ shuffle=!shuffle; }
-
-loadSong(index);
+audio.src=songs[0];
+songName.textContent=songs[0].replace(/\(.*?\)|\.mp3/g,"");
+function togglePlay(){audio.paused?audio.play():audio.pause();}
+function nextSong(){}
+function prevSong(){}
 </script>
 
 </body>
