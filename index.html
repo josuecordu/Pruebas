@@ -27,13 +27,12 @@ header h1{margin:0;font-size:2.5rem;}
 .player-wrapper{
   max-width:720px;
   margin:0 auto 0.5rem;
-  position:relative;
 }
 
 .player{
   background:#fdf8f2;
   padding:0.6rem;
-  border-radius:6px;
+  border-radius:6px 6px 0 0;
   display:flex;
   align-items:center;
   gap:0.6rem;
@@ -48,37 +47,28 @@ header h1{margin:0;font-size:2.5rem;}
 
 .progress{flex:1;}
 
-.more-btn{font-size:1.3rem;}
-
-/* PLAYLIST */
-.playlist{
-  display:none;
-  position:absolute;
-  top:110%;
-  right:0;
+.player-song{
   background:#fdf8f2;
-  width:100%;
-  border-radius:6px;
-  box-shadow:0 10px 20px rgba(0,0,0,.3);
-  max-height:220px;
-  overflow-y:auto;
-  z-index:10;
+  text-align:center;
+  font-size:0.9rem;
+  padding:0.4rem;
+  font-weight:600;
 }
 
+.playlist{
+  display:none;
+  background:#fdf8f2;
+  max-height:220px;
+  overflow-y:auto;
+  border-radius:0 0 6px 6px;
+}
 .playlist div{
   padding:0.6rem;
   cursor:pointer;
-  border-bottom:1px solid #ddd;
+  border-top:1px solid #ddd;
   font-size:0.85rem;
 }
 .playlist div:hover{background:#eee;}
-
-.song-name{
-  text-align:center;
-  font-size:0.85rem;
-  color:#333;
-  margin:0.3rem auto 1rem;
-}
 
 /* LIBRO */
 main{
@@ -99,15 +89,12 @@ main{
 }
 .page.active{display:block;}
 
-.page h2{text-align:center;margin-top:0;}
-
 .poem-content{
   height:420px;
   overflow-y:auto;
   line-height:1.8;
 }
 
-/* FAVORITO */
 .favorite{
   position:absolute;
   top:18px;
@@ -118,9 +105,7 @@ main{
 }
 .favorite.active{color:#c0392b;}
 
-/* NAVEGACIÓN */
-.page-number{text-align:center;margin-top:1rem;font-size:0.8rem;color:#777;}
-.page-nav{text-align:center;margin-top:0.6rem;}
+.page-nav{text-align:center;margin-top:1rem;}
 .page-nav button{
   border:1px solid #333;
   background:none;
@@ -143,17 +128,24 @@ main{
 <div class="player-wrapper">
   <div class="player">
     <button onclick="prevSong()"><i class="fa-solid fa-backward"></i></button>
+
     <button onclick="togglePlay()" id="playBtn">
       <i class="fa-regular fa-circle-play"></i>
     </button>
+
     <button onclick="nextSong()"><i class="fa-solid fa-forward"></i></button>
-    <input type="range" class="progress" id="progress">
-    <button class="more-btn" onclick="togglePlaylist()">⋮</button>
+
+    <button onclick="toggleShuffle()"><i class="fa-solid fa-shuffle"></i></button>
+
+    <input type="range" class="progress">
+
+    <button onclick="togglePlaylist()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
   </div>
+
+  <div class="player-song" id="songName">—</div>
   <div class="playlist" id="playlist"></div>
 </div>
 
-<div class="song-name" id="songName">—</div>
 <audio id="audio"></audio>
 
 <main>
@@ -163,7 +155,6 @@ main{
 <span class="favorite" onclick="toggleFavorite(0)">♥</span>
 <h2>Fuego a la distancia</h2>
 <div class="poem-content">
-<p>
 Entre mares y kilómetros se esconde tu voz,<br>
 y aun así, me alcanza.<br><br>
 No hay muro que detenga la chispa que encendiste sin tocarme.<br><br>
@@ -177,9 +168,7 @@ Quizá el destino juega con nosotros,<br>
 quizá el tiempo pruebe su poder,<br>
 pero hay miradas que, aunque lejanas,<br>
 encienden más que el amanecer.
-</p>
 </div>
-<div class="page-number">1</div>
 <div class="page-nav">
 <button onclick="showPage(0)">1</button>
 <button onclick="showPage(1)">2</button>
@@ -193,7 +182,6 @@ encienden más que el amanecer.
 <span class="favorite" onclick="toggleFavorite(1)">♥</span>
 <h2>Mientras tanto</h2>
 <div class="poem-content">
-<p>
 No te tengo,<br>
 pero te sostengo en la calma.<br>
 Como se sostiene una certeza<br>
@@ -214,9 +202,7 @@ Yo espero sin cansarme,<br>
 contando días como quien riega una planta:<br>
 con cuidado,<br>
 con fe.
-</p>
 </div>
-<div class="page-number">2</div>
 <div class="page-nav">
 <button onclick="showPage(0)">1</button>
 <button onclick="showPage(1)">2</button>
@@ -230,7 +216,6 @@ con fe.
 <span class="favorite" onclick="toggleFavorite(2)">♥</span>
 <h2>Te anhelo</h2>
 <div class="poem-content">
-<p>
 Como el cielo anhela al sol cuando cae la tarde.<br><br>
 No con desesperación, sino con esa certeza suave de que volverá a tocarlo.<br><br>
 Así te pienso,<br>
@@ -244,9 +229,7 @@ yo espero el momento en que tu presencia sea parte del paisaje.<br><br>
 Y cuando estés aquí,<br>
 no hará falta decir nada,<br>
 el anhelo sabrá que valió la pena.
-</p>
 </div>
-<div class="page-number">3</div>
 <div class="page-nav">
 <button onclick="showPage(0)">1</button>
 <button onclick="showPage(1)">2</button>
@@ -260,7 +243,6 @@ el anhelo sabrá que valió la pena.
 <span class="favorite" onclick="toggleFavorite(3)">♥</span>
 <h2>Destino</h2>
 <div class="poem-content">
-<p>
 Hay mujeres bellas, y luego estás tú.<br><br>
 No por la forma exacta de tu rostro,<br>
 sino por esa mirada donde el mundo baja la voz.<br><br>
@@ -276,9 +258,7 @@ sucede.<br><br>
 Porque perderse en tus ojos<br>
 no es error,<br>
 es destino.
-</p>
 </div>
-<div class="page-number">4</div>
 <div class="page-nav">
 <button onclick="showPage(0)">1</button>
 <button onclick="showPage(1)">2</button>
@@ -290,7 +270,6 @@ es destino.
 </main>
 
 <script>
-/* PÁGINAS */
 const pages=document.querySelectorAll('.page');
 function showPage(n){
   pages.forEach(p=>p.classList.remove('active'));
@@ -300,13 +279,13 @@ function showPage(n){
 /* FAVORITOS */
 let favorites=JSON.parse(localStorage.getItem("favorites"))||[];
 function toggleFavorite(i){
-  const h=document.querySelector(`.page[data-page="${i}"] .favorite`);
+  const heart=document.querySelector(`.page[data-page="${i}"] .favorite`);
   if(favorites.includes(i)){
     favorites=favorites.filter(f=>f!==i);
-    h.classList.remove("active");
+    heart.classList.remove("active");
   }else{
     favorites.push(i);
-    h.classList.add("active");
+    heart.classList.add("active");
   }
   localStorage.setItem("favorites",JSON.stringify(favorites));
 }
@@ -323,25 +302,25 @@ const songs=[
 "En las danzas y en los sueños - Estoico _ Valka (Cómo Entrenar a Tu Dragón 2)  _ _Letra_(M4A_128K).m4a",
 "Enanitos Verdes - Mariposas(MP3_160K).mp3",
 "Frances Limon(MP3_160K).mp3",
-"Glup_ - Freebola(MP3_160K).mp3",
-"Hombres G - Si no te tengo a ti(MP3_160K).mp3",
+"Glup_ -  Freebola (Video Oficial Remasterizado)(MP3_160K).mp3",
+"Hombres G - Si no te tengo a ti (Audio Oficial)(MP3_160K).mp3",
 "Igual Que Ayer(MP3_160K).mp3",
-"Jósean Log - Jacaranda(MP3_160K).mp3",
-"Jósean Log - Pruébame a Ti(MP3_160K).mp3",
-"Jósean Log - Si Hay Algo(MP3_160K).mp3",
-"León - Como Tú(MP3_160K).mp3",
-"Mon Laferte - Amárrame(MP3_160K).mp3",
+"Jósean Log - Jacaranda (lyric video)(MP3_160K).mp3",
+"Jósean Log - Pruébame a Ti (video oficial)(MP3_160K).mp3",
+"Jósean Log - Si Hay Algo (video oficial)(MP3_160K).mp3",
+"León - Como Tú (video oficial con letra)(MP3_160K).mp3",
+"Mon Laferte - Amárrame ft. Juanes(MP3_160K).mp3",
 "Mon Laferte - Amor Completo(MP3_160K).mp3",
 "Química Mayor(MP3_160K).mp3",
-"Bonita (Bonus Track)(MP3_160K).mp3"
+"Bonita (Bonus Track)(MP3_160K)_1.mp3"
 ];
 
 const audio=document.getElementById("audio");
 const songName=document.getElementById("songName");
 const playlist=document.getElementById("playlist");
 const playBtn=document.getElementById("playBtn");
-const progress=document.getElementById("progress");
 let index=0;
+let shuffle=false;
 
 function cleanName(n){
   return n.replace(/\(.*?\)|\.mp3|\.m4a/gi,"").trim();
@@ -371,20 +350,19 @@ function togglePlay(){
   }
 }
 
-function nextSong(){index=(index+1)%songs.length;loadSong();}
-function prevSong(){index=(index-1+songs.length)%songs.length;loadSong();}
+function nextSong(){
+  index = shuffle ? Math.floor(Math.random()*songs.length) : (index+1)%songs.length;
+  loadSong();
+}
+function prevSong(){
+  index=(index-1+songs.length)%songs.length;
+  loadSong();
+}
+function toggleShuffle(){shuffle=!shuffle;}
 
 function togglePlaylist(){
   playlist.style.display=playlist.style.display==="block"?"none":"block";
 }
-
-audio.addEventListener("timeupdate",()=>{
-  progress.value=(audio.currentTime/audio.duration)*100||0;
-});
-progress.addEventListener("input",()=>{
-  audio.currentTime=(progress.value/100)*audio.duration;
-});
-audio.addEventListener("ended",nextSong);
 
 loadSong();
 </script>
