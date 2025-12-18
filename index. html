@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arepita</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Playfair Display', serif;
+    }
+
+    header {
+      text-align: center;
+      color: #fff;
+      padding: 1.5rem 1rem 0.5rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.6rem;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .page {
+      display: none;
+      background: #fdf8f2;
+      max-width: 720px;
+      width: 100%;
+      padding: 2.2rem;
+      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+      line-height: 1.8;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page h2 {
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .page-number {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    .page-nav {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .page-nav button {
+      background: transparent;
+      border: 1px solid #333;
+      color: #333;
+      padding: 0.4rem 0.9rem;
+      margin: 0.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Arepita</h1>
+</header>
+
+<main>
+
+  <!-- Página 1 -->
+  <section id="page1" class="page active">
+    <h2>Fuego a la distancia</h2>
+    <p>
+      Entre mares y kilómetros se esconde tu voz,<br>
+      y aun así, me alcanza.<br><br>
+
+      No hay muro que detenga la chispa que encendiste sin tocarme.<br><br>
+
+      Eres fuego que no quema, pero arde en cada pensamiento;<br>
+      labra el aire con su fuerza, y deja en mi pecho un desvelo eterno.<br><br>
+
+      Trabajas, brillas, resistes,<br>
+      mujer hecha de empeño y llama,<br>
+      y aunque el mundo nos mida en mapas,<br>
+      mi alma te busca sin brújula ni calma.<br><br>
+
+      Quizá el destino juega con nosotros,<br>
+      quizá el tiempo pruebe su poder,<br>
+      pero hay miradas que, aunque lejanas,<br>
+      encienden más que el amanecer.
+    </p>
+
+    <div class="page-number">1</div>
+    <div class="page-nav">
+      <button onclick="showPage(1)">1</button>
+      <button onclick="showPage(2)">2</button>
+      <button onclick="showPage(3)">3</button>
+      <button onclick="showPage(4)">4</button>
+    </div>
+  </section>
+
+  <!-- Página 2 -->
+  <section id="page2" class="page">
+    <h2>Mientras tanto</h2>
+    <p>
+      No te tengo,<br>
+      pero te sostengo en la calma.<br>
+      Como se sostiene una certeza<br>
+      que no necesita pruebas.<br><br>
+
+      La distancia no nos separa,<br>
+      nos aprende.<br>
+      Nos vuelve pacientes,<br>
+      nos vuelve verdad.<br><br>
+
+      Te extraño sin ruido,<br>
+      sin urgencia,<br>
+      porque sé que el tiempo<br>
+      también sabe amar.<br><br>
+
+      Nuestro amor no corre,<br>
+      permanece.<br>
+      Crece en lo invisible,<br>
+      en lo que aún no ocurre.<br><br>
+
+      Yo espero sin cansarme,<br>
+      contando días como quien riega una planta:<br>
+      con cuidado,<br>
+      con fe.<br><br>
+
+      Y cuando al fin nos veamos,<br>
+      no habrá sorpresa,<br>
+      solo reconocimiento,<br>
+      como si siempre hubiéramos estado ahí.
+    </p>
+
+    <div class="page-number">2</div>
+    <div class="page-nav">
+      <button onclick="showPage(1)">1</button>
+      <button onclick="showPage(2)">2</button>
+      <button onclick="showPage(3)">3</button>
+      <button onclick="showPage(4)">4</button>
+    </div>
+  </section>
+
+  <!-- Página 3 -->
+  <section id="page3" class="page">
+    <h2>Te anhelo</h2>
+    <p>
+      Te anhelo<br><br>
+
+      como el cielo anhela al sol cuando cae la tarde.<br>
+      No con desesperación,<br>
+      sino con esa certeza suave de que volverá a tocarlo.<br><br>
+
+      Así te pienso,<br><br>
+
+      como se piensan los atardeceres:<br>
+      con paciencia,<br>
+      con esperanza quieta.<br><br>
+
+      Quisiera tenerte cerca<br>
+      para aprender tus silencios,<br>
+      para quedarme en tu calma<br>
+      cuando el día se cansa.<br><br>
+
+      Porque así como el cielo espera la luz dorada,<br>
+      yo espero el momento<br>
+      en que tu presencia sea parte del paisaje.<br><br>
+
+      Y cuando estés aquí,<br>
+      no hará falta decir nada:<br>
+      el anhelo sabrá que valió la pena.
+    </p>
+
+    <div class="page-number">3</div>
+    <div class="page-nav">
+      <button onclick="showPage(1)">1</button>
+      <button onclick="showPage(2)">2</button>
+      <button onclick="showPage(3)">3</button>
+      <button onclick="showPage(4)">4</button>
+    </div>
+  </section>
+
+  <!-- Página 4 -->
+  <section id="page4" class="page">
+    <h2>Destino</h2>
+    <p>
+      Hay mujeres bellas,<br>
+      y luego estás tú.<br><br>
+
+      No por la forma exacta de tu rostro,<br>
+      sino por esa mirada<br>
+      donde el mundo baja la voz.<br><br>
+
+      Tus ojos no miran,<br>
+      invitan.<br><br>
+
+      Uno entra sin darse cuenta<br>
+      y se pierde con gusto.<br><br>
+
+      En ellos el tiempo se equivoca,<br>
+      las prisas se rinden,<br>
+      y hasta mis pensamientos<br>
+      aprenden a caminar descalzos.<br><br>
+
+      Tu belleza no se exhibe,<br>
+      sucede.<br><br>
+
+      Es ese instante<br>
+      en que alguien te mira<br>
+      y ya no quiere volver a encontrarse.<br><br>
+
+      Porque perderse en tus ojos<br>
+      no es error,<br>
+      es destino.
+    </p>
+
+    <div class="page-number">4</div>
+    <div class="page-nav">
+      <button onclick="showPage(1)">1</button>
+      <button onclick="showPage(2)">2</button>
+      <button onclick="showPage(3)">3</button>
+      <button onclick="showPage(4)">4</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function showPage(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + n).classList.add('active');
+  }
+</script>
+
+</body>
+</html>
