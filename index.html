@@ -1,78 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Arepita</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arepita</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
-      font-family: 'Playfair Display', serif;
-    }
+<style>
+body{
+  margin:0;
+  font-family:'Playfair Display', serif;
+  background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
+  color:#222;
+}
 
-    header {
-      text-align: center;
-      color: #fff;
-      padding: 1.5rem 1rem 0.5rem;
-    }
+/* ===== TÍTULO ===== */
+header{
+  text-align:center;
+  padding:1.2rem;
+  color:#fff;
+}
+header h1{
+  margin:0;
+  font-size:2.6rem;
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 2.6rem;
-    }
+/* ===== REPRODUCTOR ===== */
+.player{
+  max-width:720px;
+  margin:0 auto 1rem;
+  background:#fdf8f2;
+  padding:0.8rem;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  position:relative;
+}
 
-    main {
-      display: flex;
-      justify-content: center;
-      padding: 1.5rem;
-    }
+.player button{
+  background:none;
+  border:none;
+  font-size:1.2rem;
+  cursor:pointer;
+}
 
-    .page {
-      display: none;
-      background: #fdf8f2;
-      max-width: 720px;
-      width: 100%;
-      padding: 2.2rem;
-      border-radius: 6px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.35);
-      line-height: 1.8;
-    }
+.progress{
+  flex:1;
+}
 
-    .page.active {
-      display: block;
-    }
+.menu-btn{
+  font-size:1.4rem;
+}
 
-    .page h2 {
-      text-align: center;
-      font-weight: 500;
-    }
+.song-list{
+  display:none;
+  position:absolute;
+  top:45px;
+  right:10px;
+  background:#fff;
+  border:1px solid #ccc;
+  border-radius:6px;
+  max-height:200px;
+  overflow:auto;
+  width:260px;
+  z-index:10;
+}
 
-    .page-number {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      color: #777;
-    }
+.song-list div{
+  padding:0.5rem;
+  cursor:pointer;
+  font-size:0.85rem;
+}
 
-    .page-nav {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
+.song-list div:hover{
+  background:#eee;
+}
 
-    .page-nav button {
-      background: transparent;
-      border: 1px solid #333;
-      color: #333;
-      padding: 0.4rem 0.9rem;
-      margin: 0.2rem;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-  </style>
+/* ===== LIBRO ===== */
+main{
+  display:flex;
+  justify-content:center;
+  padding:1rem;
+}
+
+.page{
+  display:none;
+  background:#fdf8f2;
+  max-width:720px;
+  width:100%;
+  padding:2rem;
+  border-radius:6px;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+  line-height:1.8;
+}
+
+.page.active{display:block;}
+
+.page h2{text-align:center;}
+
+.page-number{
+  text-align:center;
+  margin-top:2rem;
+  font-size:0.8rem;
+  color:#777;
+}
+
+.page-nav{
+  text-align:center;
+  margin-top:1rem;
+}
+.page-nav button{
+  border:1px solid #333;
+  background:none;
+  border-radius:50%;
+  width:32px;
+  height:32px;
+  margin:0 4px;
+  cursor:pointer;
+}
+</style>
 </head>
 
 <body>
@@ -81,173 +129,251 @@
   <h1>Arepita</h1>
 </header>
 
+<!-- ===== REPRODUCTOR ===== -->
+<div class="player">
+  <button onclick="prevSong()">⏮️</button>
+  <button onclick="togglePlay()">▶️</button>
+  <button onclick="nextSong()">⏭️</button>
+  <button onclick="toggleShuffle()">🔀</button>
+  <input type="range" class="progress" value="0">
+  <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+
+  <div class="song-list" id="songList"></div>
+</div>
+
+<audio id="audio"></audio>
+
 <main>
 
-  <!-- Página 1 -->
-  <section id="page1" class="page active">
-    <h2>Fuego a la distancia</h2>
-    <p>
-      Entre mares y kilómetros se esconde tu voz,<br>
-      y aun así, me alcanza.<br><br>
+<!-- ===== PÁGINA 1 ===== -->
+<section class="page active">
+<h2>Fuego a la distancia</h2>
+<p>
+Entre mares y kilómetros se esconde tu voz,<br>
+y aun así, me alcanza.<br><br>
 
-      No hay muro que detenga la chispa que encendiste sin tocarme.<br><br>
+No hay muro que detenga la chispa que encendiste sin tocarme.<br><br>
 
-      Eres fuego que no quema, pero arde en cada pensamiento;<br>
-      labra el aire con su fuerza, y deja en mi pecho un desvelo eterno.<br><br>
+Eres fuego que no quema, pero arde en cada pensamiento;<br>
+labra el aire con su fuerza, y deja en mi pecho un desvelo eterno.<br><br>
 
-      Trabajas, brillas, resistes,<br>
-      mujer hecha de empeño y llama,<br>
-      y aunque el mundo nos mida en mapas,<br>
-      mi alma te busca sin brújula ni calma.<br><br>
+Trabajas, brillas, resistes,<br>
+mujer hecha de empeño y llama,<br>
+y aunque el mundo nos mida en mapas,<br>
+mi alma te busca sin brújula ni calma.<br><br>
 
-      Quizá el destino juega con nosotros,<br>
-      quizá el tiempo pruebe su poder,<br>
-      pero hay miradas que, aunque lejanas,<br>
-      encienden más que el amanecer.
-    </p>
+Quizá el destino juega con nosotros,<br>
+quizá el tiempo pruebe su poder,<br>
+pero hay miradas que, aunque lejanas,<br>
+encienden más que el amanecer.
+</p>
+<div class="page-number">1</div>
+<div class="page-nav">
+<button onclick="showPage(0)">1</button>
+<button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
+</div>
+</section>
 
-    <div class="page-number">1</div>
-    <div class="page-nav">
-      <button onclick="showPage(1)">1</button>
-      <button onclick="showPage(2)">2</button>
-      <button onclick="showPage(3)">3</button>
-      <button onclick="showPage(4)">4</button>
-    </div>
-  </section>
+<!-- ===== PÁGINA 2 ===== -->
+<section class="page">
+<h2>Mientras tanto</h2>
+<p>
+No te tengo,<br>
+pero te sostengo en la calma.<br>
+Como se sostiene una certeza<br>
+que no necesita pruebas.<br><br>
 
-  <!-- Página 2 -->
-  <section id="page2" class="page">
-    <h2>Mientras tanto</h2>
-    <p>
-      No te tengo,<br>
-      pero te sostengo en la calma.<br>
-      Como se sostiene una certeza<br>
-      que no necesita pruebas.<br><br>
+La distancia no nos separa,<br>
+nos aprende.<br>
+Nos vuelve pacientes,<br>
+nos vuelve verdad.<br><br>
 
-      La distancia no nos separa,<br>
-      nos aprende.<br>
-      Nos vuelve pacientes,<br>
-      nos vuelve verdad.<br><br>
+Te extraño sin ruido,<br>
+sin urgencia,<br>
+porque sé que el tiempo<br>
+también sabe amar.<br><br>
 
-      Te extraño sin ruido,<br>
-      sin urgencia,<br>
-      porque sé que el tiempo<br>
-      también sabe amar.<br><br>
+Nuestro amor no corre,<br>
+permanece.<br>
+Crece en lo invisible,<br>
+en lo que aún no ocurre.<br><br>
 
-      Nuestro amor no corre,<br>
-      permanece.<br>
-      Crece en lo invisible,<br>
-      en lo que aún no ocurre.<br><br>
+Yo espero sin cansarme,<br>
+contando días como quien riega una planta:<br>
+con cuidado,<br>
+con fe.<br><br>
 
-      Yo espero sin cansarme,<br>
-      contando días como quien riega una planta:<br>
-      con cuidado,<br>
-      con fe.<br><br>
+Y cuando al fin nos veamos,<br>
+no habrá sorpresa,<br>
+solo reconocimiento,<br>
+como si siempre hubiéramos estado ahí.
+</p>
+<div class="page-number">2</div>
+<div class="page-nav">
+<button onclick="showPage(0)">1</button>
+<button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
+</div>
+</section>
 
-      Y cuando al fin nos veamos,<br>
-      no habrá sorpresa,<br>
-      solo reconocimiento,<br>
-      como si siempre hubiéramos estado ahí.
-    </p>
+<!-- ===== PÁGINA 3 ===== -->
+<section class="page">
+<h2>Te anhelo</h2>
+<p>
+Te anhelo,<br><br>
 
-    <div class="page-number">2</div>
-    <div class="page-nav">
-      <button onclick="showPage(1)">1</button>
-      <button onclick="showPage(2)">2</button>
-      <button onclick="showPage(3)">3</button>
-      <button onclick="showPage(4)">4</button>
-    </div>
-  </section>
+como el cielo anhela al sol cuando cae la tarde.<br>
+No con desesperación,<br>
+sino con esa certeza suave de que volverá a tocarlo.<br><br>
 
-  <!-- Página 3 -->
-  <section id="page3" class="page">
-    <h2>Te anhelo</h2>
-    <p>
-      Te anhelo<br><br>
+Así te pienso,<br><br>
 
-      como el cielo anhela al sol cuando cae la tarde.<br>
-      No con desesperación,<br>
-      sino con esa certeza suave de que volverá a tocarlo.<br><br>
+como se piensan los atardeceres:<br>
+con paciencia,<br>
+con esperanza quieta.<br><br>
 
-      Así te pienso,<br><br>
+Quisiera tenerte cerca<br>
+para aprender tus silencios,<br>
+para quedarme en tu calma<br>
+cuando el día se cansa.<br><br>
 
-      como se piensan los atardeceres:<br>
-      con paciencia,<br>
-      con esperanza quieta.<br><br>
+Porque así como el cielo espera la luz dorada,<br>
+yo espero el momento<br>
+en que tu presencia sea parte del paisaje.<br><br>
 
-      Quisiera tenerte cerca<br>
-      para aprender tus silencios,<br>
-      para quedarme en tu calma<br>
-      cuando el día se cansa.<br><br>
+Y cuando estés aquí,<br>
+no hará falta decir nada:<br>
+el anhelo sabrá que valió la pena.
+</p>
+<div class="page-number">3</div>
+<div class="page-nav">
+<button onclick="showPage(0)">1</button>
+<button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
+</div>
+</section>
 
-      Porque así como el cielo espera la luz dorada,<br>
-      yo espero el momento<br>
-      en que tu presencia sea parte del paisaje.<br><br>
+<!-- ===== PÁGINA 4 ===== -->
+<section class="page">
+<h2>Destino</h2>
+<p>
+Hay mujeres bellas,<br>
+y luego estás tú.<br><br>
 
-      Y cuando estés aquí,<br>
-      no hará falta decir nada:<br>
-      el anhelo sabrá que valió la pena.
-    </p>
+No por la forma exacta de tu rostro,<br>
+sino por esa mirada<br>
+donde el mundo baja la voz.<br><br>
 
-    <div class="page-number">3</div>
-    <div class="page-nav">
-      <button onclick="showPage(1)">1</button>
-      <button onclick="showPage(2)">2</button>
-      <button onclick="showPage(3)">3</button>
-      <button onclick="showPage(4)">4</button>
-    </div>
-  </section>
+Tus ojos no miran,<br>
+invitan.<br><br>
 
-  <!-- Página 4 -->
-  <section id="page4" class="page">
-    <h2>Destino</h2>
-    <p>
-      Hay mujeres bellas,<br>
-      y luego estás tú.<br><br>
+Uno entra sin darse cuenta<br>
+y se pierde con gusto.<br><br>
 
-      No por la forma exacta de tu rostro,<br>
-      sino por esa mirada<br>
-      donde el mundo baja la voz.<br><br>
+En ellos el tiempo se equivoca,<br>
+las prisas se rinden,<br>
+y hasta mis pensamientos<br>
+aprenden a caminar descalzos.<br><br>
 
-      Tus ojos no miran,<br>
-      invitan.<br><br>
+Tu belleza no se exhibe,<br>
+sucede.<br><br>
 
-      Uno entra sin darse cuenta<br>
-      y se pierde con gusto.<br><br>
+Es ese instante<br>
+en que alguien te mira<br>
+y ya no quiere volver a encontrarse.<br><br>
 
-      En ellos el tiempo se equivoca,<br>
-      las prisas se rinden,<br>
-      y hasta mis pensamientos<br>
-      aprenden a caminar descalzos.<br><br>
-
-      Tu belleza no se exhibe,<br>
-      sucede.<br><br>
-
-      Es ese instante<br>
-      en que alguien te mira<br>
-      y ya no quiere volver a encontrarse.<br><br>
-
-      Porque perderse en tus ojos<br>
-      no es error,<br>
-      es destino.
-    </p>
-
-    <div class="page-number">4</div>
-    <div class="page-nav">
-      <button onclick="showPage(1)">1</button>
-      <button onclick="showPage(2)">2</button>
-      <button onclick="showPage(3)">3</button>
-      <button onclick="showPage(4)">4</button>
-    </div>
-  </section>
+Porque perderse en tus ojos<br>
+no es error,<br>
+es destino.
+</p>
+<div class="page-number">4</div>
+<div class="page-nav">
+<button onclick="showPage(0)">1</button>
+<button onclick="showPage(1)">2</button>
+<button onclick="showPage(2)">3</button>
+<button onclick="showPage(3)">4</button>
+</div>
+</section>
 
 </main>
 
 <script>
-  function showPage(n) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page' + n).classList.add('active');
-  }
+const pages=document.querySelectorAll('.page');
+function showPage(n){
+  pages.forEach(p=>p.classList.remove('active'));
+  pages[n].classList.add('active');
+}
+
+/* ===== MÚSICA ===== */
+const songs=[
+"Combustión - Jósean Log(MP3_160K).mp3",
+"Diego Luna - Te Amo Y Más (Letra)(MP3_160K).mp3",
+"el libro de la vida - No Matter Where You Are _ letra en español(MP3_160K).mp3",
+"En las danzas y en los sueños - Estoico _ Valka (Cómo Entrenar a Tu Dragón 2)  _ _Letra_(M4A_128K).m4a",
+"Enanitos Verdes - Mariposas(MP3_160K).mp3",
+"Frances Limon(MP3_160K).mp3",
+"Glup_ -  Freebola (Video Oficial Remasterizado)(MP3_160K).mp3",
+"Hombres G - Si no te tengo a ti (Audio Oficial)(MP3_160K).mp3",
+"Igual Que Ayer(MP3_160K).mp3",
+"Jósean Log - Jacaranda (lyric video)(MP3_160K).mp3",
+"Jósean Log - Pruébame a Ti (video oficial)(MP3_160K).mp3",
+"Jósean Log - Si Hay Algo (video oficial)(MP3_160K).mp3",
+"León - Como Tú (video oficial con letra)(MP3_160K).mp3",
+"Mon Laferte - Amárrame ft. Juanes(MP3_160K).mp3",
+"Mon Laferte - Amor Completo(MP3_160K).mp3",
+"Química Mayor(MP3_160K).mp3",
+"Bonita (Bonus Track)(MP3_160K)_1.mp3"
+];
+
+const audio=document.getElementById('audio');
+let index=0;
+let shuffle=false;
+
+audio.src=songs[index];
+audio.onended=()=>nextSong();
+
+function togglePlay(){
+  audio.paused?audio.play():audio.pause();
+}
+
+function nextSong(){
+  index=shuffle?Math.floor(Math.random()*songs.length):(index+1)%songs.length;
+  audio.src=songs[index];
+  audio.play();
+}
+
+function prevSong(){
+  index=(index-1+songs.length)%songs.length;
+  audio.src=songs[index];
+  audio.play();
+}
+
+function toggleShuffle(){
+  shuffle=!shuffle;
+  alert(shuffle?"Aleatorio activado":"Aleatorio desactivado");
+}
+
+function toggleMenu(){
+  document.getElementById('songList').style.display=
+  document.getElementById('songList').style.display==="block"?"none":"block";
+}
+
+const list=document.getElementById('songList');
+songs.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.textContent=s;
+  d.onclick=()=>{
+    index=i;
+    audio.src=s;
+    audio.play();
+    list.style.display="none";
+  };
+  list.appendChild(d);
+});
 </script>
 
 </body>
