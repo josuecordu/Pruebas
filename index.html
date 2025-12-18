@@ -14,21 +14,22 @@ body{
   background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
 }
 
-/* ===== TÍTULO ===== */
+/* ===== HEADER ===== */
 header{
   text-align:center;
   padding:1.2rem;
   color:#fff;
 }
-header h1{
-  margin:0;
-  font-size:2.5rem;
-}
+header h1{margin:0;font-size:2.5rem;}
 
 /* ===== REPRODUCTOR ===== */
-.player{
+.player-wrapper{
   max-width:720px;
-  margin:0 auto;
+  margin:0 auto 0.5rem;
+  position:relative;
+}
+
+.player{
   background:#fdf8f2;
   padding:0.6rem;
   border-radius:6px;
@@ -45,6 +46,35 @@ header h1{
 }
 
 .progress{flex:1;}
+
+.more-btn{
+  font-size:1.3rem;
+}
+
+/* LISTA DE CANCIONES */
+.playlist{
+  display:none;
+  position:absolute;
+  top:110%;
+  right:0;
+  background:#fdf8f2;
+  width:100%;
+  border-radius:6px;
+  box-shadow:0 10px 20px rgba(0,0,0,.3);
+  max-height:220px;
+  overflow-y:auto;
+  z-index:10;
+}
+
+.playlist div{
+  padding:0.6rem;
+  cursor:pointer;
+  border-bottom:1px solid #ddd;
+  font-size:0.85rem;
+}
+.playlist div:hover{
+  background:#eee;
+}
 
 .song-name{
   text-align:center;
@@ -74,19 +104,15 @@ main{
 
 .page.active{display:block;}
 
-.page h2{
-  text-align:center;
-  margin-top:0;
-}
+.page h2{text-align:center;margin-top:0;}
 
-/* CONTENIDO FIJO */
 .poem-content{
   height:420px;
   overflow-y:auto;
   line-height:1.8;
 }
 
-/* ===== FAVORITO ♥ ===== */
+/* FAVORITO */
 .favorite{
   position:absolute;
   top:18px;
@@ -97,18 +123,10 @@ main{
 }
 .favorite.active{color:#c0392b;}
 
-/* ===== NAVEGACIÓN ===== */
-.page-number{
-  text-align:center;
-  margin-top:1rem;
-  font-size:0.8rem;
-  color:#777;
-}
+/* NAVEGACIÓN */
+.page-number{text-align:center;margin-top:1rem;font-size:0.8rem;color:#777;}
 
-.page-nav{
-  text-align:center;
-  margin-top:0.6rem;
-}
+.page-nav{text-align:center;margin-top:0.6rem;}
 .page-nav button{
   border:1px solid #333;
   background:none;
@@ -128,11 +146,16 @@ main{
 </header>
 
 <!-- REPRODUCTOR -->
-<div class="player">
-  <button onclick="prevSong()">⏮️</button>
-  <button onclick="togglePlay()">▶️</button>
-  <button onclick="nextSong()">⏭️</button>
-  <input type="range" class="progress">
+<div class="player-wrapper">
+  <div class="player">
+    <button onclick="prevSong()">⏮️</button>
+    <button onclick="togglePlay()">▶️</button>
+    <button onclick="nextSong()">⏭️</button>
+    <input type="range" class="progress">
+    <button class="more-btn" onclick="togglePlaylist()">⋮</button>
+  </div>
+
+  <div class="playlist" id="playlist"></div>
 </div>
 
 <div class="song-name" id="songName">—</div>
@@ -203,12 +226,7 @@ en lo que aún no ocurre.<br><br>
 Yo espero sin cansarme,<br>
 contando días como quien riega una planta:<br>
 con cuidado,<br>
-con fe.<br><br>
-
-Y cuando al fin nos veamos,<br>
-no habrá sorpresa,<br>
-solo reconocimiento,<br>
-como si siempre hubiéramos estado ahí.
+con fe.
 </p>
 </div>
 <div class="page-number">2</div>
@@ -227,20 +245,15 @@ como si siempre hubiéramos estado ahí.
 <div class="poem-content">
 <p>
 Como el cielo anhela al sol cuando cae la tarde.<br><br>
-
 No con desesperación, sino con esa certeza suave de que volverá a tocarlo.<br><br>
-
 Así te pienso,<br>
 como se piensan los atardeceres:<br>
 con paciencia,<br>
 con esperanza quieta.<br><br>
-
 Quisiera tenerte cerca para aprender tus silencios,<br>
 para quedarme en tu calma cuando el día se cansa.<br><br>
-
 Porque así como el cielo espera la luz dorada,<br>
 yo espero el momento en que tu presencia sea parte del paisaje.<br><br>
-
 Y cuando estés aquí,<br>
 no hará falta decir nada,<br>
 el anhelo sabrá que valió la pena.
@@ -262,27 +275,17 @@ el anhelo sabrá que valió la pena.
 <div class="poem-content">
 <p>
 Hay mujeres bellas, y luego estás tú.<br><br>
-
 No por la forma exacta de tu rostro,<br>
 sino por esa mirada donde el mundo baja la voz.<br><br>
-
 Tus ojos no miran,<br>
 invitan.<br><br>
-
 Uno entra sin darse cuenta<br>
 y se pierde con gusto.<br><br>
-
 En ellos el tiempo se equivoca,<br>
 las prisas se rinden,<br>
 y hasta mis pensamientos aprenden a caminar descalzos.<br><br>
-
 Tu belleza no se exhibe,<br>
 sucede.<br><br>
-
-Es ese instante<br>
-en que alguien te mira<br>
-y ya no quiere volver a encontrarse.<br><br>
-
 Porque perderse en tus ojos<br>
 no es error,<br>
 es destino.
@@ -307,23 +310,25 @@ function showPage(n){
   pages[n].classList.add('active');
 }
 
-/* ===== FAVORITO (toggle) ===== */
+/* ===== FAVORITOS MÚLTIPLES ===== */
+let favorites=JSON.parse(localStorage.getItem("favorites"))||[];
+
 function toggleFavorite(i){
-  const current=localStorage.getItem("favoritePoem");
-  if(current==i){
-    localStorage.removeItem("favoritePoem");
-    document.querySelectorAll(".favorite").forEach(f=>f.classList.remove("active"));
+  const heart=document.querySelector(`.page[data-page="${i}"] .favorite`);
+  if(favorites.includes(i)){
+    favorites=favorites.filter(f=>f!==i);
+    heart.classList.remove("active");
   }else{
-    localStorage.setItem("favoritePoem", i);
-    document.querySelectorAll(".favorite").forEach(f=>f.classList.remove("active"));
-    document.querySelector(`.page[data-page="${i}"] .favorite`).classList.add("active");
+    favorites.push(i);
+    heart.classList.add("active");
   }
+  localStorage.setItem("favorites",JSON.stringify(favorites));
 }
 
-const fav=localStorage.getItem("favoritePoem");
-if(fav!==null){
-  document.querySelector(`.page[data-page="${fav}"] .favorite`).classList.add("active");
-}
+favorites.forEach(i=>{
+  const h=document.querySelector(`.page[data-page="${i}"] .favorite`);
+  if(h)h.classList.add("active");
+});
 
 /* ===== MÚSICA ===== */
 const songs=[
@@ -331,25 +336,36 @@ const songs=[
 "Diego Luna - Te Amo Y Más (Letra)(MP3_160K).mp3"
 ];
 
-let index=0;
 const audio=document.getElementById("audio");
 const songName=document.getElementById("songName");
+const playlist=document.getElementById("playlist");
+let index=0;
 
-function cleanName(name){
-  return name.replace(/\(.*?\)|\.mp3|\.m4a/gi,"").trim();
+function cleanName(n){
+  return n.replace(/\(.*?\)|\.mp3|\.m4a/gi,"").trim();
 }
 
-function loadSong(i){
-  audio.src=songs[i];
-  songName.textContent=cleanName(songs[i]);
+songs.forEach((s,i)=>{
+  const div=document.createElement("div");
+  div.textContent=cleanName(s);
+  div.onclick=()=>{index=i;loadSong();}
+  playlist.appendChild(div);
+});
+
+function loadSong(){
+  audio.src=songs[index];
+  songName.textContent=cleanName(songs[index]);
   audio.play();
 }
 
-function togglePlay(){ audio.paused?audio.play():audio.pause(); }
-function nextSong(){ index=(index+1)%songs.length; loadSong(index); }
-function prevSong(){ index=(index-1+songs.length)%songs.length; loadSong(index); }
+function togglePlay(){audio.paused?audio.play():audio.pause();}
+function nextSong(){index=(index+1)%songs.length;loadSong();}
+function prevSong(){index=(index-1+songs.length)%songs.length;loadSong();}
+function togglePlaylist(){
+  playlist.style.display=playlist.style.display==="block"?"none":"block";
+}
 
-loadSong(index);
+loadSong();
 </script>
 
 </body>
