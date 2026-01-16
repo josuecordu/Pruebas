@@ -40,7 +40,6 @@ function spawnTouchHearts(x, y) {
     }
 }
 
-/* ===== GRAN CORAZÓN ===== */
 let bigHeart = null;
 const loveText = document.getElementById("loveText");
 
