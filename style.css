@@ -1,137 +1,106 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #ffd6e9, #f6a6c9, #e070a8);
+body{
+  margin:0;
+  font-family:'Playfair Display', serif;
+  background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
 }
 
-/* ===== CONTADOR ===== */
-#counter-wrapper {
-    position: fixed;
-    top: 18px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    z-index: 10;
+/* HEADER */
+header{
+  text-align:center;
+  padding:1.2rem;
+  color:#fff;
+}
+header h1{margin:0;font-size:2.5rem;}
+
+/* REPRODUCTOR */
+.player-wrapper{
+  max-width:720px;
+  margin:0 auto 0.5rem;
 }
 
-#counter {
-    background: rgba(199, 72, 128, 0.35);
-    color: #b8326a;
-    padding: 10px 18px;
-    border-radius: 25px;
-    font-size: 16px;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.player{
+  background:#fdf8f2;
+  padding:0.6rem;
+  border-radius:6px 6px 0 0;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
 }
 
-/* ===== TEXTO 3 DEDOS ===== */
-#loveText {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
-    font-size: 38px;
-    color: #c7357a;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 20;
-    text-shadow: 0 0 12px rgba(255, 100, 160, 0.9);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+.player button{
+  background:none;
+  border:none;
+  font-size:1.2rem;
+  cursor:pointer;
 }
 
-/* clase activa parpadeo con pulso */
-#loveText.active {
-    opacity: 1;
-    animation: pulseText 0.5s ease-in-out infinite alternate;
+.progress{flex:1;}
+
+.player-song{
+  background:#fdf8f2;
+  text-align:center;
+  font-size:0.9rem;
+  padding:0.4rem;
+  font-weight:600;
 }
 
-/* animación de pulso */
-@keyframes pulseText {
-    0% { transform: translate(-50%, -50%) scale(0.95); }
-    100% { transform: translate(-50%, -50%) scale(1.05); }
+.playlist{
+  display:none;
+  background:#fdf8f2;
+  max-height:220px;
+  overflow-y:auto;
+  border-radius:0 0 6px 6px;
+}
+.playlist div{
+  padding:0.6rem;
+  cursor:pointer;
+  border-top:1px solid #ddd;
+  font-size:0.85rem;
+}
+.playlist div:hover{background:#eee;}
+
+/* LIBRO */
+main{
+  display:flex;
+  justify-content:center;
+  padding:1rem;
 }
 
-/* ===== CORAZONES CAYENDO ===== */
-.falling-heart {
-    position: fixed;
-    top: -20px;
-    font-size: 18px;
-    color: rgba(255, 120, 180, 0.7);
-    animation: fall linear infinite;
+.page{
+  display:none;
+  background:#fdf8f2;
+  max-width:720px;
+  width:100%;
+  padding:2rem;
+  border-radius:6px;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+  position:relative;
+}
+.page.active{display:block;}
+
+.poem-content{
+  height:420px;
+  overflow-y:auto;
+  line-height:1.8;
 }
 
-@keyframes fall {
-    to { transform: translateY(110vh); }
+.favorite{
+  position:absolute;
+  top:18px;
+  right:18px;
+  font-size:1.5rem;
+  cursor:pointer;
+  color:#bbb;
 }
+.favorite.active{color:#c0392b;}
 
-/* ===== TOQUE 1 DEDO ===== */
-.touch-heart {
-    position: fixed;
-    font-size: 20px;
-    color: #ff4f9a;
-    pointer-events: none;
-    animation: pop 0.8s ease-out forwards;
-}
-
-@keyframes pop {
-    0% { transform: scale(0); opacity: 1; }
-    100% { transform: scale(1.4) translate(var(--x), var(--y)); opacity: 0; }
-}
-
-/* ===== CORAZÓN GRANDE (2 DEDOS) ===== */
-.big-heart-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 540px;
-    height: 540px;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 15;
-    animation: pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.15); }
-    100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-/* ===== PARTÍCULAS GRAN CORAZÓN ===== */
-.particle-heart {
-    position: absolute;
-    font-size: 14px;
-    color: #ff5fa2;
-    animation: float 2.8s ease-in-out infinite, shimmer 1.4s ease-in-out infinite;
-}
-
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-}
-
-@keyframes shimmer {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
-
-/* ===== PARTÍCULAS DEL TEXTO 3 DEDOS ===== */
-.text-particle {
-    position: absolute;
-    font-size: 12px;
-    color: #ff7fcf;
-    animation: floatText 1.5s ease-in-out forwards;
-    pointer-events: none;
-    opacity: 0.8;
-}
-
-@keyframes floatText {
-    0% { transform: translate(0,0) scale(1); opacity: 1; }
-    50% { transform: translate(var(--x), var(--y)) scale(1.2); opacity: 0.6; }
-    100% { transform: translate(var(--x), var(--y)) scale(0.8); opacity: 0; }
+.page-nav{text-align:center;margin-top:1rem;}
+.page-nav button{
+  border:1px solid #333;
+  background:none;
+  border-radius:50%;
+  width:32px;
+  height:32px;
+  margin:0 4px;
+  cursor:pointer;
 }
