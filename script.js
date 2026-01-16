@@ -83,10 +83,12 @@ function nextSong(){
   index = shuffle ? Math.floor(Math.random()*songs.length) : (index+1)%songs.length;
   loadSong();
 }
+
 function prevSong(){
   index=(index-1+songs.length)%songs.length;
   loadSong();
 }
+
 function toggleShuffle(){shuffle=!shuffle;}
 
 function togglePlaylist(){
