@@ -43,6 +43,7 @@ function spawnTouchHearts(x, y) {
 let bigHeart = null;
 const loveText = document.getElementById("loveText");
 
+/* ===== GRAN CORAZÓN ===== */
 function showBigHeart() {
     if (bigHeart) return;
     bigHeart = document.createElement("div");
@@ -71,6 +72,24 @@ function hideBigHeart() {
     }
 }
 
+/* ===== PARPADEO TEXTO 3 DEDOS ===== */
+let blinkInterval = null;
+
+function startBlinking() {
+    if (blinkInterval) return; // si ya está activo, no hacer nada
+    blinkInterval = setInterval(() => {
+        loveText.classList.toggle("active");
+    }, 500); // cambia cada 0.5s
+}
+
+function stopBlinking() {
+    if (blinkInterval) {
+        clearInterval(blinkInterval);
+        blinkInterval = null;
+    }
+    loveText.classList.remove("active"); // asegurar que desaparezca al soltar
+}
+
 /* ===== TOUCH ===== */
 document.addEventListener("touchstart", e => {
     if (e.touches.length === 1)
@@ -80,7 +99,7 @@ document.addEventListener("touchstart", e => {
         showBigHeart();
 
     if (e.touches.length === 3)
-        loveText.classList.add("active");
+        startBlinking();
 });
 
 document.addEventListener("touchmove", e => {
@@ -93,5 +112,5 @@ document.addEventListener("touchend", e => {
         hideBigHeart();
 
     if (e.touches.length < 3)
-        loveText.classList.remove("active");
+        stopBlinking();
 });
