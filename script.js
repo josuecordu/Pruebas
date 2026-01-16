@@ -1,127 +1,109 @@
-const startDate = new Date("2025-09-08T21:00:00");
-const counter = document.getElementById("counter");
-const loveText = document.getElementById("loveText");
-
-let bigHeart = null;
-let textParticlesInterval = null;
-
-/* ===== CONTADOR ===== */
-function updateCounter() {
-    const now = new Date();
-    let diff = Math.floor((now - startDate) / 1000);
-    const d = Math.floor(diff / 86400); diff %= 86400;
-    const h = Math.floor(diff / 3600); diff %= 3600;
-    const m = Math.floor(diff / 60);
-    const s = diff % 60;
-    counter.innerText = `Todo empezó hace: ${d} días ${h} h ${m} min ${s} s`;
-}
-setInterval(updateCounter, 1000);
-updateCounter();
-
-/* ===== CORAZONES CAYENDO ===== */
-setInterval(() => {
-    const h = document.createElement("div");
-    h.className = "falling-heart";
-    h.textContent = "❤";
-    h.style.left = Math.random() * 100 + "vw";
-    h.style.animationDuration = 6 + Math.random() * 4 + "s";
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 10000);
-}, 420);
-
-/* ===== TOQUE 1 DEDO ===== */
-function spawnTouchHearts(x, y) {
-    for (let i = 0; i < 8; i++) {
-        const h = document.createElement("div");
-        h.className = "touch-heart";
-        h.textContent = "❤";
-        h.style.left = x + "px";
-        h.style.top = y + "px";
-        h.style.setProperty("--x", (Math.random() * 40 - 20) + "px");
-        h.style.setProperty("--y", (Math.random() * 40 - 20) + "px");
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 800);
-    }
+/* NAVEGACIÓN PÁGINAS */
+const pages=document.querySelectorAll('.page');
+function showPage(n){
+  pages.forEach(p=>p.classList.remove('active'));
+  pages[n].classList.add('active');
 }
 
-/* ===== GRAN CORAZÓN ===== */
-function showBigHeart() {
-    if (bigHeart) return;
-    bigHeart = document.createElement("div");
-    bigHeart.className = "big-heart-container";
-    document.body.appendChild(bigHeart);
+/* FAVORITOS */
+let favorites=JSON.parse(localStorage.getItem("favorites"))||[];
+function toggleFavorite(i){
+  const heart=document.querySelector(`.page[data-page="${i}"] .favorite`);
+  if(favorites.includes(i)){
+    favorites=favorites.filter(f=>f!==i);
+    heart.classList.remove("active");
+  }else{
+    favorites.push(i);
+    heart.classList.add("active");
+  }
+  localStorage.setItem("favorites",JSON.stringify(favorites));
+}
+favorites.forEach(i=>{
+  const h=document.querySelector(`.page[data-page="${i}"] .favorite`);
+  if(h)h.classList.add("active");
+});
 
-    for (let i = 0; i < 520; i++) {
-        const t = Math.random() * Math.PI * 2;
-        const x = 16 * Math.pow(Math.sin(t), 3);
-        const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+/* MÚSICA */
+const songs=[
+"Combustión - Jósean Log(MP3_160K).mp3",
+"Diego Luna - Te Amo Y Más (Letra)(MP3_160K).mp3",
+"el libro de la vida - No Matter Where You Are _ letra en español(MP3_160K).mp3",
+"En las danzas y en los sueños - Estoico _ Valka (Cómo Entrenar a Tu Dragón 2)  _ _Letra_(M4A_128K).m4a",
+"Enanitos Verdes - Mariposas(MP3_160K).mp3",
+"Frances Limon(MP3_160K).mp3",
+"Glup_ -  Freebola (Video Oficial Remasterizado)(MP3_160K).mp3",
+"Hombres G - Si no te tengo a ti (Audio Oficial)(MP3_160K).mp3",
+"Igual Que Ayer(MP3_160K).mp3",
+"Jósean Log - Jacaranda (lyric video)(MP3_160K).mp3",
+"Jósean Log - Pruébame a Ti (video oficial)(MP3_160K).mp3",
+"Jósean Log - Si Hay Algo (video oficial)(MP3_160K).mp3",
+"León - Como Tú (video oficial con letra)(MP3_160K).mp3",
+"Mon Laferte - Amárrame ft. Juanes(MP3_160K).mp3",
+"Mon Laferte - Amor Completo(MP3_160K).mp3",
+"Química Mayor(MP3_160K).mp3",
+"Bonita (Bonus Track)(MP3_160K)_1.mp3"
+];
 
-        const p = document.createElement("div");
-        p.className = "particle-heart";
-        p.textContent = "❤";
-        p.style.left = 270 + x * 10 + "px";
-        p.style.top = 270 + y * 10 + "px";
-        p.style.animationDelay = Math.random() * 2 + "s";
-        bigHeart.appendChild(p);
-    }
+const audio=document.getElementById("audio");
+const songName=document.getElementById("songName");
+const playlist=document.getElementById("playlist");
+const playBtn=document.getElementById("playBtn");
+let index=0;
+let shuffle=false;
+
+function cleanName(n){
+  return n.replace(/\(.*?\)|\.mp3|\.m4a/gi,"").trim();
 }
 
-function hideBigHeart() {
-    if (bigHeart) {
-        bigHeart.remove();
-        bigHeart = null;
-    }
+songs.forEach((s,i)=>{
+  const div=document.createElement("div");
+  div.textContent=cleanName(s);
+  div.onclick=()=>{index=i;loadSong();}
+  playlist.appendChild(div);
+});
+
+function loadSong(){
+  audio.src=songs[index];
+  songName.textContent=cleanName(songs[index]);
+  audio.play();
+  playBtn.innerHTML='<i class="fa-solid fa-stop"></i>';
 }
 
-/* ===== PARPADEO + PARTICULAS TEXTO ===== */
-function startTextEffects() {
-    loveText.classList.add("active");
-
-    // Crear partículas cada 200ms alrededor del texto
-    if (!textParticlesInterval) {
-        textParticlesInterval = setInterval(() => {
-            const p = document.createElement("div");
-            p.className = "text-particle";
-            p.textContent = "❤";
-            const rect = loveText.getBoundingClientRect();
-            p.style.left = rect.left + rect.width/2 + "px";
-            p.style.top = rect.top + rect.height/2 + "px";
-            p.style.setProperty("--x", (Math.random() * 80 - 40) + "px");
-            p.style.setProperty("--y", (Math.random() * -80 - 20) + "px"); // va hacia arriba
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 1500);
-        }, 200);
-    }
+function togglePlay(){
+  if(audio.paused){
+    audio.play();
+    playBtn.innerHTML='<i class="fa-solid fa-stop"></i>';
+  }else{
+    audio.pause();
+    playBtn.innerHTML='<i class="fa-regular fa-circle-play"></i>';
+  }
 }
 
-function stopTextEffects() {
-    loveText.classList.remove("active");
-    if (textParticlesInterval) {
-        clearInterval(textParticlesInterval);
-        textParticlesInterval = null;
-    }
+function nextSong(){
+  index = shuffle ? Math.floor(Math.random()*songs.length) : (index+1)%songs.length;
+  loadSong();
+}
+function prevSong(){
+  index=(index-1+songs.length)%songs.length;
+  loadSong();
+}
+function toggleShuffle(){shuffle=!shuffle;}
+
+function togglePlaylist(){
+  playlist.style.display=playlist.style.display==="block"?"none":"block";
 }
 
-/* ===== ACTUALIZACIÓN CONTINUA DE TOUCH ===== */
-function handleTouches(e) {
-    const fingers = e.touches.length;
+/* BARRA DE PROGRESO */
+audio.ontimeupdate=()=>{
+  if(audio.duration){
+    const progressBar=document.querySelector(".progress");
+    progressBar.max=audio.duration;
+    progressBar.value=audio.currentTime;
+  }
+};
+document.querySelector(".progress").oninput=(e)=>{
+  audio.currentTime=e.target.value;
+};
 
-    if (fingers === 1) {
-        spawnTouchHearts(e.touches[0].clientX, e.touches[0].clientY);
-    }
-    if (fingers === 2) {
-        showBigHeart();
-    } else {
-        hideBigHeart();
-    }
-    if (fingers === 3) {
-        startTextEffects();
-    } else {
-        stopTextEffects();
-    }
-}
-
-/* ===== EVENTOS ===== */
-document.addEventListener("touchstart", handleTouches);
-document.addEventListener("touchmove", handleTouches);
-document.addEventListener("touchend", handleTouches);
+/* CARGAR PRIMERA CANCIÓN */
+loadSong();
