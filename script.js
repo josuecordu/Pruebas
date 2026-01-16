@@ -2,8 +2,8 @@ const startDate = new Date("2025-09-08T21:00:00");
 const counter = document.getElementById("counter");
 const loveText = document.getElementById("loveText");
 
-let blinkInterval = null;
 let bigHeart = null;
+let textParticlesInterval = null;
 
 /* ===== CONTADOR ===== */
 function updateCounter() {
@@ -44,7 +44,7 @@ function spawnTouchHearts(x, y) {
     }
 }
 
-/* ===== CORAZÓN GRANDE ===== */
+/* ===== GRAN CORAZÓN ===== */
 function showBigHeart() {
     if (bigHeart) return;
     bigHeart = document.createElement("div");
@@ -73,21 +73,33 @@ function hideBigHeart() {
     }
 }
 
-/* ===== PARPADEO TEXTO 3 DEDOS ===== */
-function startBlinking() {
-    if (!blinkInterval) {
-        blinkInterval = setInterval(() => {
-            loveText.classList.toggle("active");
-        }, 500);
+/* ===== PARPADEO + PARTICULAS TEXTO ===== */
+function startTextEffects() {
+    loveText.classList.add("active");
+
+    // Crear partículas cada 200ms alrededor del texto
+    if (!textParticlesInterval) {
+        textParticlesInterval = setInterval(() => {
+            const p = document.createElement("div");
+            p.className = "text-particle";
+            p.textContent = "❤";
+            const rect = loveText.getBoundingClientRect();
+            p.style.left = rect.left + rect.width/2 + "px";
+            p.style.top = rect.top + rect.height/2 + "px";
+            p.style.setProperty("--x", (Math.random() * 80 - 40) + "px");
+            p.style.setProperty("--y", (Math.random() * -80 - 20) + "px"); // va hacia arriba
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1500);
+        }, 200);
     }
 }
 
-function stopBlinking() {
-    if (blinkInterval) {
-        clearInterval(blinkInterval);
-        blinkInterval = null;
-    }
+function stopTextEffects() {
     loveText.classList.remove("active");
+    if (textParticlesInterval) {
+        clearInterval(textParticlesInterval);
+        textParticlesInterval = null;
+    }
 }
 
 /* ===== ACTUALIZACIÓN CONTINUA DE TOUCH ===== */
@@ -103,9 +115,9 @@ function handleTouches(e) {
         hideBigHeart();
     }
     if (fingers === 3) {
-        startBlinking();
+        startTextEffects();
     } else {
-        stopBlinking();
+        stopTextEffects();
     }
 }
 
