@@ -1,7 +1,11 @@
-/* ===== CONTADOR ===== */
 const startDate = new Date("2025-09-08T21:00:00");
 const counter = document.getElementById("counter");
+const loveText = document.getElementById("loveText");
 
+let blinkInterval = null;
+let bigHeart = null;
+
+/* ===== CONTADOR ===== */
 function updateCounter() {
     const now = new Date();
     let diff = Math.floor((now - startDate) / 1000);
@@ -25,7 +29,7 @@ setInterval(() => {
     setTimeout(() => h.remove(), 10000);
 }, 420);
 
-/* ===== INTERACCIONES ===== */
+/* ===== TOQUE 1 DEDO ===== */
 function spawnTouchHearts(x, y) {
     for (let i = 0; i < 8; i++) {
         const h = document.createElement("div");
@@ -40,10 +44,7 @@ function spawnTouchHearts(x, y) {
     }
 }
 
-let bigHeart = null;
-const loveText = document.getElementById("loveText");
-
-/* ===== GRAN CORAZÓN ===== */
+/* ===== CORAZÓN GRANDE ===== */
 function showBigHeart() {
     if (bigHeart) return;
     bigHeart = document.createElement("div");
@@ -73,13 +74,12 @@ function hideBigHeart() {
 }
 
 /* ===== PARPADEO TEXTO 3 DEDOS ===== */
-let blinkInterval = null;
-
 function startBlinking() {
-    if (blinkInterval) return; // si ya está activo, no hacer nada
-    blinkInterval = setInterval(() => {
-        loveText.classList.toggle("active");
-    }, 500); // cambia cada 0.5s
+    if (!blinkInterval) {
+        blinkInterval = setInterval(() => {
+            loveText.classList.toggle("active");
+        }, 500);
+    }
 }
 
 function stopBlinking() {
@@ -87,30 +87,29 @@ function stopBlinking() {
         clearInterval(blinkInterval);
         blinkInterval = null;
     }
-    loveText.classList.remove("active"); // asegurar que desaparezca al soltar
+    loveText.classList.remove("active");
 }
 
-/* ===== TOUCH ===== */
-document.addEventListener("touchstart", e => {
-    if (e.touches.length === 1)
-        spawnTouchHearts(e.touches[0].clientX, e.touches[0].clientY);
+/* ===== ACTUALIZACIÓN CONTINUA DE TOUCH ===== */
+function handleTouches(e) {
+    const fingers = e.touches.length;
 
-    if (e.touches.length === 2)
+    if (fingers === 1) {
+        spawnTouchHearts(e.touches[0].clientX, e.touches[0].clientY);
+    }
+    if (fingers === 2) {
         showBigHeart();
-
-    if (e.touches.length === 3)
-        startBlinking();
-});
-
-document.addEventListener("touchmove", e => {
-    if (e.touches.length === 1)
-        spawnTouchHearts(e.touches[0].clientX, e.touches[0].clientY);
-});
-
-document.addEventListener("touchend", e => {
-    if (e.touches.length < 2)
+    } else {
         hideBigHeart();
-
-    if (e.touches.length < 3)
+    }
+    if (fingers === 3) {
+        startBlinking();
+    } else {
         stopBlinking();
-});
+    }
+}
+
+/* ===== EVENTOS ===== */
+document.addEventListener("touchstart", handleTouches);
+document.addEventListener("touchmove", handleTouches);
+document.addEventListener("touchend", handleTouches);
