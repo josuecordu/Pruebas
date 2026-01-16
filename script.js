@@ -72,31 +72,13 @@ function hideBigHeart() {
     }
 }
 
-/* ===== GATO INTERACTIVO ===== */
-const cat = document.getElementById("cat");
-let isJumping = false;
-
-function jumpCat() {
-    if (isJumping) return;
-    isJumping = true;
-    cat.style.transition = "transform 0.3s ease-out";
-    cat.style.transform = "translateY(-50px)";
-    setTimeout(() => {
-        cat.style.transform = "translateY(0)";
-        setTimeout(() => {
-            cat.style.transition = "";
-            isJumping = false;
-        }, 300);
-    }, 300);
-}
-
 /* ===== TOUCH ===== */
 document.addEventListener("touchstart", e => {
     if (e.touches.length === 1)
         spawnTouchHearts(e.touches[0].clientX, e.touches[0].clientY);
 
     if (e.touches.length === 2)
-        jumpCat();
+        showBigHeart();
 
     if (e.touches.length === 3)
         loveText.classList.add("active");
